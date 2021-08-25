@@ -15,3 +15,5 @@ ToDo:
 * Allowing changing the measurement interval, now fixed to 5 seconds. There is a rudimentary command interpreter included, but it is not used now.
 
 F.J. Kraan, fjkraan@electrickery.nl
+
+<img src="IMG_3666.JPG" alt="Screenshot from the LCD">
