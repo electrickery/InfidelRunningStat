@@ -1,3 +1,11 @@
+/* RunningStat - calculates mean, variance and standard deviation 
+ *  without storing all values.
+ *  
+ * The implementation is copied from this page:
+ *  https://www.johndcook.com/blog/standard_deviation/. 
+ * 
+ * fjkraan@electrickery.nl, 2021-08-25
+ */
 #include <math.h>
 
 class RunningStat
