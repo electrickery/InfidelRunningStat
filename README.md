@@ -12,5 +12,6 @@ The values are from the fixed-point library. The Serial console displays more fr
 
 ToDo:
 * work out why the Arduino IDE doesn't want to work with the library header file. Including source code is not the correct way, but it appears to work.
+* Allowing changing the measurement interval, now fixed to 5 seconds. There is a rudimentary command interpreter included, but it is not used now.
 
 F.J. Kraan, fjkraan@electrickery.nl
