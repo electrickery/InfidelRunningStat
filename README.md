@@ -10,4 +10,7 @@ The values are from the fixed-point library. The Serial console displays more fr
 * Source RunningStat library: https://www.johndcook.com/blog/standard_deviation/
 * Infidel info: https://www.youmagine.com/designs/infidel-inline-filament-diameter-estimator-lowcost-10-24
 
+ToDo:
+* work out why the Arduino IDE doesn't want to work with the library header file. Including source code is not the correct way, but it appears to work.
+
 F.J. Kraan, fjkraan@electrickery.nl
