@@ -58,10 +58,9 @@ void loop() {
     delay(ccInterval);
   }
 
-  if(!running) return;
+  if(running == false) return;
     
   float infidelin = 0;
-  Serial.print("  ");
   if (digitalRead(INFIDEL_FAULT)) {
     Serial.println("Infidel fault ");
   } else {
@@ -70,28 +69,28 @@ void loop() {
     byte b2 = Wire.read();
     infidelin = (((float) b1) * 256 + b2) / 1000;
 
-    if (!muted) {
-  
-    Serial.print("Diameter: ");
-    Serial.print(infidelin);
-    Serial.print(" mm");
-
     rsd.Push(infidelin);
     
-    Serial.print(", Count: ");
-    Serial.print(rsd.NumDataValues());
-    Serial.print(", Mean: ");
-    Serial.print(rsd.Mean(), 4);
-    Serial.print(", Variance: ");
-    Serial.print(rsd.Variance(), 6);
-    Serial.print(", Stdev: ");
-    Serial.print(rsd.StandardDeviation(), 4);
-
-    Serial.print(", Min: ");
-    Serial.print(rsd.Min());
-    Serial.print(", Max: ");
-    Serial.print(rsd.Max());
-    Serial.println(",");
+    if (muted == false) {
+  
+      Serial.print("Diameter: ");
+      Serial.print(infidelin);
+      Serial.print(" mm");
+  
+      Serial.print(", Count: ");
+      Serial.print(rsd.NumDataValues());
+      Serial.print(", Mean: ");
+      Serial.print(rsd.Mean(), 4);
+      Serial.print(", Variance: ");
+      Serial.print(rsd.Variance(), 6);
+      Serial.print(", Stdev: ");
+      Serial.print(rsd.StandardDeviation(), 4);
+  
+      Serial.print(", Min: ");
+      Serial.print(rsd.Min());
+      Serial.print(", Max: ");
+      Serial.print(rsd.Max());
+      Serial.println(",");
     }
   }
   
@@ -195,7 +194,7 @@ void commandInterpreter() {
       break;
     case 'R':
     case 'r':
-      pause();
+      report();
       break;
     case 'S':
     case 's':
