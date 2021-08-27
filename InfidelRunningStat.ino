@@ -1,5 +1,5 @@
 
-#define VERSION "v0.1"
+#define VERSION "v0.3"
 
 #include <Wire.h>
 
@@ -15,10 +15,8 @@
 const int rs = 12, en = 11, d4 = 7, d5 = 6, d6 = 5, d7 = 4;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
-#include "RunningStatInt.cpp"
 #include "RunningStat.cpp"
 
-RunningStatInt rsi;
 RunningStat rsd;
 
 #define SERIALBUFSIZE         80
@@ -29,6 +27,9 @@ int interval = 5000;
 
 char busy[] = {'|', '-', '|', '-'};
 int busyIndex = 0;
+
+int running = true;
+int muted = false;
 
 void setup() {
   
@@ -56,46 +57,44 @@ void loop() {
     commandCollector();
     delay(ccInterval);
   }
+
+  if(!running) return;
     
   float infidelin = 0;
   Serial.print("  ");
   if (digitalRead(INFIDEL_FAULT)) {
-    Serial.print("Infidel fault ");
+    Serial.println("Infidel fault ");
   } else {
     Wire.requestFrom(INFIDELADD, 2);
     byte b1 = Wire.read();
     byte b2 = Wire.read();
     infidelin = (((float) b1) * 256 + b2) / 1000;
+
+    if (!muted) {
   
     Serial.print("Diameter: ");
     Serial.print(infidelin);
     Serial.print(" mm");
 
-    rsi.Push(infidelin);
     rsd.Push(infidelin);
     
     Serial.print(", Count: ");
-    Serial.print(rsi.NumDataValues());
-    Serial.print(", Mean: ");
-    Serial.print(rsi.Mean(), 4);
-    Serial.print(", VarianceI: ");
-    Serial.print(rsi.Variance(), 4);
-    Serial.print(", StdevI: ");
-    Serial.print(rsi.StandardDeviation(), 4);
+    Serial.print(rsd.NumDataValues());
     Serial.print(", Mean: ");
     Serial.print(rsd.Mean(), 4);
     Serial.print(", Variance: ");
-    Serial.print(rsd.Variance(), 4);
+    Serial.print(rsd.Variance(), 6);
     Serial.print(", Stdev: ");
     Serial.print(rsd.StandardDeviation(), 4);
 
     Serial.print(", Min: ");
-    Serial.print(rsi.Min());
+    Serial.print(rsd.Min());
     Serial.print(", Max: ");
-    Serial.print(rsi.Max());
-
+    Serial.print(rsd.Max());
+    Serial.println(",");
+    }
   }
-  Serial.println();
+  
 
 // LCD 
   lcd.clear();
@@ -112,22 +111,22 @@ void loop() {
     lcd.print(" mm");
     
     lcd.setCursor(0, 1);
-    lcd.print("Mean,Stdev:");
-    lcd.print(rsi.Mean());
+    lcd.print("Avg,SD: ");
+    lcd.print(rsd.Mean(), 3);
 //    lcd.print(", Variance: ");
-//    lcd.print(rsi.Variance());
+//    lcd.print(rsd.Variance());
     lcd.print(",");
-    lcd.print(rsi.StandardDeviation());
+    lcd.print(rsd.StandardDeviation(), 4);
     
     lcd.setCursor(0, 2);
-    lcd.print("Min,Max:");
-    lcd.print(rsi.Min());
+    lcd.print("Min,Max: ");
+    lcd.print(rsd.Min());
     lcd.print(",");
-    lcd.print(rsi.Max());
+    lcd.print(rsd.Max());
       
     lcd.setCursor(0, 3);
     lcd.print("Count: ");
-    lcd.print(rsi.NumDataValues());
+    lcd.print(rsd.NumDataValues());
   }
 }
 
@@ -170,16 +169,37 @@ void commandInterpreter() {
 //    case 'i':
 //      setInterval();
 //      break;
-    case 'T':
-    case 't':
-      setTime();
+    case 'C':
+    case 'c':
+      clear();
       break;
     case 'H':
     case 'h':
     case '?':
       Serial.println("Usage: [Hh?] - help");
+      Serial.println("       [Cc] - clear running stat");
 //      Serial.println("       [Ii]nnnn - set interval") ;
-      Serial.println("       [Tt]HHMMSS - set time") ;
+      Serial.println("       [Mm] - mute report");
+      Serial.println("       [Pp] - pause running stat");
+      Serial.println("       [Rr] - unmute report");
+      Serial.println("       [Ss] - start running stat");
+//      Serial.println("       [Tt]HHMMSS - set time") ;
+      break;
+    case 'M':
+    case 'm':
+      mute();
+      break;
+    case 'P':
+    case 'p':
+      pause();
+      break;
+    case 'R':
+    case 'r':
+      pause();
+      break;
+    case 'S':
+    case 's':
+      start();
       break;
     default:
       Serial.print(bufByte);
@@ -197,7 +217,7 @@ void clearSerialBuffer() {
 }
 
 // T, t - set RTC time
-void setTime() {
+/* void setTime() {
   if (setBufPointer != 7) {
     Serial.println("ERROR T arg. size");
     clearSerialBuffer();
@@ -215,11 +235,31 @@ void setTime() {
   Serial.print(make2digits(minute));
   Serial.print(make2digits(second));
 
-}
+} */
 
 int getDigit(char numberDigit) {
     if (numberDigit < '0' || numberDigit > '9') {
       return 0;
     }
     return numberDigit - '0';
+}
+
+void start() {
+    running = true;
+}
+
+void pause() {
+    running = false;
+}
+
+void clear() {
+    rsd.Clear();
+}
+
+void mute() {
+  muted = true;
+}
+
+void report() {
+  muted = false;
 }

@@ -1,5 +1,5 @@
-#ifndef RunningStatInt_h
-#define RunningStatInt_h
+#ifndef RunningStat_h
+#define RunningStat_h
 
 class RunningStatInt {
 
@@ -10,11 +10,13 @@ class RunningStatInt {
         double Mean() const;
         double Variance() const;
         double StandardDeviation() const;
+        double Min();
+        double Max();
         
     private:
         int m_n;
         double m_oldM, m_newM, m_oldS, m_newS;
-
+        double min, max;
 };
 
-#endif // RunningStatInt_h
+#endif // RunningStat_h

@@ -3,9 +3,12 @@
  *  
  * The implementation is copied from this page:
  *  https://www.johndcook.com/blog/standard_deviation/. 
+ *  
+ *  The Min() and Max() methods were added by me
  * 
  * fjkraan@electrickery.nl, 2021-08-25
  */
+
 #include <math.h>
 
 class RunningStat
@@ -26,7 +29,10 @@ class RunningStat
             if (m_n == 1)
             {
                 m_oldM = m_newM = x;
-                m_oldS = 0.0;
+                m_oldS = m_newS = 0.0;
+                
+                // extra boundary values (added fjk)
+                min = max = x;
             }
             else
             {
@@ -36,6 +42,11 @@ class RunningStat
                 // set up for next iteration
                 m_oldM = m_newM; 
                 m_oldS = m_newS;
+
+                // extra boundary values (added fjk)
+                min = (x < min) ? x : min;
+                max = (x > max) ? x : max;
+
             }
         }
 
@@ -59,7 +70,18 @@ class RunningStat
             return sqrt( Variance() );
         }
 
+        double Min() const
+        {
+            return min;
+        }
+        
+        double Max() const
+        {
+            return max;
+        }
+
     private:
         int m_n;
         double m_oldM, m_newM, m_oldS, m_newS;
+        double min, max;
     };
