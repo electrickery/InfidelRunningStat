@@ -8,8 +8,8 @@
  * 
  * fjkraan@electrickery.nl, 2021-08-25
  */
-
-#include <math.h>
+ 
+#include <Arduino.h>
 
 class RunningStat
     {

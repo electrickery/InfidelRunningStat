@@ -15,7 +15,7 @@
 const int rs = 12, en = 11, d4 = 7, d5 = 6, d6 = 5, d7 = 4;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
-#include "RunningStat.cpp"
+#include "RunningStat.cpp" // Including a header file is better, but the overhead ...
 
 RunningStat rsd;
 
@@ -75,7 +75,7 @@ void loop() {
   
       Serial.print("Diameter: ");
       Serial.print(infidelin);
-      Serial.print(" mm");
+//      Serial.print(" mm");
   
       Serial.print(", Count: ");
       Serial.print(rsd.NumDataValues());
