@@ -26,3 +26,5 @@ ToDo:
 F.J. Kraan, fjkraan@electrickery.nl
 
 <img src="InfidelV0.3LCD.jpg" alt="Screenshot of the LCD showing actual diameter, mean (Avg), standard deviation (SD), minimum, maximum and measurement count.">
+
+<img src="InfidelExtruderAttach.jpg" alt="The infidel attached to the extruder of a Prusa MK3S+ 3D-printer"> 
