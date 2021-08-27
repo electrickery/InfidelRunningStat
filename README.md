@@ -6,6 +6,15 @@ The original library usage of double precision floats works better than the own 
 The LCD display just shows the actual value, mean value, standard deviation, minimum value, maximum value and the number of measurements. 
 The Serial console displays more fractional digits and also values from the original RunningStat library. The Min() and Max() were my addition.
 
+Output of the Serial console looks like this:
+
+  ...
+  Diameter: 1.68 mm, Count: 4, Mean: 1.6862, Variance: 0.000012, Stdev: 0.0035, Min: 1.68, Max: 1.69,
+  Diameter: 1.68 mm, Count: 5, Mean: 1.6846, Variance: 0.000023, Stdev: 0.0048, Min: 1.68, Max: 1.69,
+  Diameter: 1.68 mm, Count: 6, Mean: 1.6833, Variance: 0.000028, Stdev: 0.0053, Min: 1.68, Max: 1.69,
+  Diameter: 1.68 mm, Count: 7, Mean: 1.6823, Variance: 0.000031, Stdev: 0.0056, Min: 1.68, Max: 1.69,
+  ...
+
 * Source RunningStat library: https://www.johndcook.com/blog/standard_deviation/
 * Infidel info: https://www.youmagine.com/designs/infidel-inline-filament-diameter-estimator-lowcost-10-24
 
@@ -16,4 +25,4 @@ ToDo:
 
 F.J. Kraan, fjkraan@electrickery.nl
 
-<img src="IMG_3666.JPG" alt="Screenshot from the LCD">
+<img src="InfidelV0.3LCD.jpg" alt="Screenshot of the LCD showing actual diameter, mean (Avg), standard deviation (SD), minimum, maximum and measurement count.">
