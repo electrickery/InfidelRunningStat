@@ -1,4 +1,4 @@
-
+#define NAME "Infidel RunningStat"
 #define VERSION "v0.3"
 
 #include <Wire.h>
@@ -34,7 +34,8 @@ int muted = false;
 void setup() {
   
   Serial.begin(9600);
-  Serial.print(F("Infidel RunningStat test "));
+  Serial.print(F(NAME));
+  Serial.print(" test ");
   Serial.print(VERSION);
   Serial.println(F("!"));
   
@@ -44,7 +45,7 @@ void setup() {
 
   lcd.begin(20, 4);
 
-  lcd.print("Infidel RunningStat");
+  lcd.print(NAME);
   lcd.setCursor(0, 1);
   lcd.print(VERSION);
 
@@ -175,13 +176,17 @@ void commandInterpreter() {
     case 'H':
     case 'h':
     case '?':
+      Serial.print(NAME);
+      Serial.print(" version ");
+      Serial.println(VERSION);
       Serial.println("Usage: [Hh?] - help");
       Serial.println("       [Cc] - clear running stat");
 //      Serial.println("       [Ii]nnnn - set interval") ;
       Serial.println("       [Mm] - mute report");
       Serial.println("       [Pp] - pause running stat");
       Serial.println("       [Rr] - unmute report");
-      Serial.println("       [Ss] - start running stat");
+      Serial.println("       [Ss] - (re-)start running stat");
+      Serial.println("       [Vv] - print version");
 //      Serial.println("       [Tt]HHMMSS - set time") ;
       break;
     case 'M':
@@ -199,6 +204,11 @@ void commandInterpreter() {
     case 'S':
     case 's':
       start();
+      break;
+    case 'V':
+    case 'v':
+      Serial.print("Version: ");
+      Serial.println(VERSION);
       break;
     default:
       Serial.print(bufByte);
@@ -256,9 +266,9 @@ void clear() {
 }
 
 void mute() {
-  muted = true;
+    muted = true;
 }
 
 void report() {
-  muted = false;
+    muted = false;
 }
