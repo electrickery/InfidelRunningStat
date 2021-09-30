@@ -10,6 +10,9 @@ The 0.4 version add simple support for two buttons at the A2 and A3 pins:
  * upper button - start count
  * lower button - stop count
  * both buttons - reset statistic data
+ 
+The lower right character position is used to indicate running status with alternating '-' and '|' characters. If the counting is stopped, 
+a space is printed.
 
 Output of the Serial console looks like this:
 
@@ -28,6 +31,7 @@ ToDo:
 * Allowing changing the measurement interval, now fixed to 5 seconds. There is a rudimentary command interpreter included, 
  but only commands for starting, pausing, muting, umuting and clearing are implemented.
 * Add reset for min and max values.
+* Add '\' and '/' to running status sequence.
 
 F.J. Kraan, fjkraan@electrickery.nl
 
