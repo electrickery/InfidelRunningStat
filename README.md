@@ -6,6 +6,11 @@ The original library usage of double precision floats works better than the own 
 The LCD display just shows the actual value, mean value, standard deviation, minimum value, maximum value and the number of measurements. 
 The Serial console displays more fractional digits and also values from the original RunningStat library. The Min() and Max() were my addition.
 
+The 0.4 version add simple support for two buttons at the A2 and A3 pins:
+ * upper button - start count
+ * lower button - stop count
+ * both buttons - reset statistic data
+
 Output of the Serial console looks like this:
 
     ...
@@ -22,6 +27,7 @@ ToDo:
 * work out why the Arduino IDE doesn't want to work with the library header file. Including source code is not the correct way, but it appears to work.
 * Allowing changing the measurement interval, now fixed to 5 seconds. There is a rudimentary command interpreter included, 
  but only commands for starting, pausing, muting, umuting and clearing are implemented.
+* Add reset for min and max values.
 
 F.J. Kraan, fjkraan@electrickery.nl
 

@@ -1,5 +1,5 @@
 #define NAME "Infidel RunningStat"
-#define VERSION "v0.3"
+#define VERSION "v0.4"
 
 #include <Wire.h>
 
@@ -19,6 +19,16 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 RunningStat rsd;
 
+#define TOPBUTTON A2
+#define BOTBUTTON A3
+
+byte topButState;
+byte botButtonState;
+byte lastTopButtonState = HIGH;
+byte lastBotButtonState = HIGH;
+bool topButtonPressed = false;
+bool botButtonPressed = false;
+
 #define SERIALBUFSIZE         80
 char serialBuffer[SERIALBUFSIZE];
 byte setBufPointer = 0;
@@ -27,6 +37,7 @@ int interval = 5000;
 
 char busy[] = {'|', '-', '|', '-'};
 int busyIndex = 0;
+bool busyState = false;
 
 int running = true;
 int muted = false;
@@ -40,6 +51,9 @@ void setup() {
   Serial.println(F("!"));
   
   Wire.begin();
+
+  pinMode(TOPBUTTON, INPUT_PULLUP);
+  pinMode(BOTBUTTON, INPUT_PULLUP);
   
   pinMode(INFIDEL_FAULT, INPUT_PULLUP);
 
@@ -56,6 +70,31 @@ void loop() {
   int partialIntervalCount = interval / ccInterval;
   for (int p=0; p < partialIntervalCount; p++) {
     commandCollector();
+    
+    // Elaborate button code
+    byte topButtonRead = digitalRead(TOPBUTTON);
+    byte botButtonRead = digitalRead(BOTBUTTON);
+    topButtonPressed = false;
+    botButtonPressed = false;
+    if (topButtonRead == LOW && topButtonRead == lastTopButtonState) {
+      topButtonPressed = true;
+    }
+    if (botButtonRead == LOW && botButtonRead == lastBotButtonState) {
+      botButtonPressed = true;
+    }
+    if (topButtonPressed && !botButtonPressed) {
+      busyState = true;
+    }
+    if (!topButtonPressed && botButtonPressed) {
+      busyState = false;
+    }
+    if (topButtonPressed && botButtonPressed) {
+      clear();
+    }
+    
+    lastTopButtonState = topButtonRead;
+    lastBotButtonState = botButtonRead;
+
     delay(ccInterval);
   }
 
@@ -70,7 +109,9 @@ void loop() {
     byte b2 = Wire.read();
     infidelin = (((float) b1) * 256 + b2) / 1000;
 
-    rsd.Push(infidelin);
+    if (busyState) {
+      rsd.Push(infidelin);
+    }
     
     if (muted == false) {
   
@@ -91,6 +132,14 @@ void loop() {
       Serial.print(rsd.Min());
       Serial.print(", Max: ");
       Serial.print(rsd.Max());
+
+//      Serial.print(",  ");
+//      Serial.print(topButtonPressed);
+//      Serial.print(", ");
+//      Serial.print(botButtonPressed);
+//      Serial.print(", ");
+//      Serial.print(busyState);
+      
       Serial.println(",");
     }
   }
@@ -104,7 +153,7 @@ void loop() {
     lcd.print("Infidel fault");
     lcd.setCursor(0, 3);
     lcd.print(busy[busyIndex]);
-    busyIndex = (busyIndex < 3) ?  busyIndex+1 : 0;
+    bumpBusy();
   } else {
     lcd.print("Diameter: ");
     lcd.print(infidelin);
@@ -127,7 +176,20 @@ void loop() {
     lcd.setCursor(0, 3);
     lcd.print("Count: ");
     lcd.print(rsd.NumDataValues());
+
+    lcd.setCursor(19, 3);
+    if (busyState) {
+      lcd.print(busy[busyIndex]);
+      bumpBusy();
+    } else {
+      lcd.print(' ');
+    }
+    
   }
+}
+
+void bumpBusy() {
+  busyIndex = (busyIndex < 3) ?  busyIndex+1 : 0;
 }
 
 String make2digits(int number) {
